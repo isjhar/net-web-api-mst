@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using NetWebApiTemplate.Api.Middlewares;
+using NetWebApiTemplate.Api.OperationFilters;
 using NetWebApiTemplate.Infrastructure.Auth;
 using NewWebApiTemplate.Application.Exceptions;
 using NewWebApiTemplate.Application.Interfaces;
@@ -30,7 +32,21 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    // Add JWT Authentication scheme
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer", // must be lowercase
+        BearerFormat = "JWT"
+    });
+
+    c.OperationFilter<AuthorizeCheckOperationFilter>();
+});
 
 // Add jwt auth
 var jwtSetting = builder.Configuration.GetSection("Jwt").Get<JwtSetting>() ?? throw new AppException("Configuration Jwt is not defined");
