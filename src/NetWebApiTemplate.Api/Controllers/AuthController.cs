@@ -5,7 +5,7 @@ using NewWebApiTemplate.Application.Services;
 
 namespace NetWebApiTemplate.Api.Controllers
 {
-    [Route("[controller]")]
+    [Route("auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -15,7 +15,7 @@ namespace NetWebApiTemplate.Api.Controllers
             _userService = userService;
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var result = await _userService.LoginAsync(new UserCredentialsDto
@@ -31,7 +31,7 @@ namespace NetWebApiTemplate.Api.Controllers
             }));
         }
 
-        [HttpPost("Relogin")]
+        [HttpPost("relogin")]
         public async Task<IActionResult> Relogin([FromBody] RefreshTokenRequest request)
         {
             var result = await _userService.ReloginAsync(request.Token);

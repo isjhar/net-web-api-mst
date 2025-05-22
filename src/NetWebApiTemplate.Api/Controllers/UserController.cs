@@ -5,12 +5,12 @@ using NewWebApiTemplate.Domain.Enums;
 
 namespace NetWebApiTemplate.Api.Controllers
 {
-    [Route("[controller]")]
+    [Route("user")]
     [ApiController]
     public class UserController : Controller
     {
         [Permission(PermissionKey.ViewUser)]
-        [HttpGet]
+        [HttpGet()]
         public async Task<IActionResult> GetLoggedUser()
         {
             return Json(new ApiResponse<string>("Test"));
