@@ -6,5 +6,6 @@ namespace NewWebApiTemplate.Application.Services
     {
         Task<PairTokenDto> LoginAsync(UserCredentialsDto auth);
         Task<PairTokenDto> ReloginAsync(string refreshToken);
+        Task<UserInfoDto> FindUserInfoByIdAsync(Guid id);
     }
 }

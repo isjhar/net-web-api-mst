@@ -22,21 +22,32 @@ namespace NewWebApiTemplate.Application.Services
 
         public async Task<PairTokenDto> LoginAsync(UserCredentialsDto auth)
         {
-            var authenticatedUser = await _userRepository.AuthenticateAsync(auth) ?? throw new AppException("Username or password was incorrect");
+            var authenticatedUser = await _userRepository.AuthenticateAsync(auth) ?? throw AppExceptionFactory.UsernameOrPasswordIncorrect;
 
             return await GeneratePairToken(authenticatedUser);
         }
 
         public async Task<PairTokenDto> ReloginAsync(string refreshToken)
         {
-            var userId = await _refreshTokenRepository.FindUserIdByRefreshToken(refreshToken) ?? throw new InvalidParamsException();
+            var userId = await _refreshTokenRepository.FindUserIdByRefreshToken(refreshToken) ?? throw AppExceptionFactory.InvalidParams;
 
-            var authenticatedUser = await _userRepository.FindById(userId) ?? throw new InvalidParamsException();
+            var authenticatedUser = await _userRepository.FindByIdAsync(userId) ?? throw AppExceptionFactory.InvalidParams;
 
             return await GeneratePairToken(authenticatedUser);
         }
 
-        private async Task<PairTokenDto> GeneratePairToken(User? user)
+        public async Task<UserInfoDto> FindUserInfoByIdAsync(Guid id)
+        {
+            var user = await _userRepository.FindByIdAsync(id) ?? throw AppExceptionFactory.InvalidParams;
+
+            return new UserInfoDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+            };
+        }
+
+        private async Task<PairTokenDto> GeneratePairToken(User user)
         {
             var accessToken = await _tokenGenerator.GenerateAccessToken(CreatePayload(user));
             var refreshToken = await _tokenGenerator.GenerateRefreshToken();

@@ -22,7 +22,7 @@ namespace NetWebApiTemplate.Infrastructure.Auth
         {
             return Task.Run(() =>
             {
-                var jwtSetting = _configuration.GetSection("Jwt").Get<JwtSetting>() ?? throw new AppException("Configuration Jwt is not defined");
+                var jwtSetting = _configuration.GetSection("Jwt").Get<JwtSetting>() ?? throw AppExceptionFactory.JwtIsNotDefined;
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.Secret));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

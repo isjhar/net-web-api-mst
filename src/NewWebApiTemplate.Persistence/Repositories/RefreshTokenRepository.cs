@@ -39,7 +39,7 @@ namespace NewWebApiTemplate.Persistence.Repositories
 
         public async Task StoreRefreshTokenAsync(StoreRefreshTokenDto data)
         {
-            var jwtSetting = _configuration.GetSection("Jwt").Get<JwtSetting>() ?? throw new AppException("Configuration Jwt is not defined");
+            var jwtSetting = _configuration.GetSection("Jwt").Get<JwtSetting>() ?? throw AppExceptionFactory.JwtIsNotDefined;
             var expiresAt = DateTime.UtcNow.AddDays(jwtSetting.RefreshTokenExpiryDays);
             var row = await context.RefreshTokens.FirstOrDefaultAsync(d => d.UserId == data.UserId);
             if (row != null)

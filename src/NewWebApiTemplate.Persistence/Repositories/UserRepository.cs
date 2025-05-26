@@ -49,7 +49,7 @@ namespace NewWebApiTemplate.Persistence.Repositories
             return result;
         }
 
-        public async Task<User?> FindById(Guid id)
+        public async Task<User?> FindByIdAsync(Guid id)
         {
             User? result = null;
             var userRow = await context.Users

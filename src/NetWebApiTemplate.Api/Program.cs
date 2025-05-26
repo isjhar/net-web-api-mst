@@ -49,7 +49,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Add jwt auth
-var jwtSetting = builder.Configuration.GetSection("Jwt").Get<JwtSetting>() ?? throw new AppException("Configuration Jwt is not defined");
+var jwtSetting = builder.Configuration.GetSection("Jwt").Get<JwtSetting>() ?? throw AppExceptionFactory.JwtIsNotDefined;
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
