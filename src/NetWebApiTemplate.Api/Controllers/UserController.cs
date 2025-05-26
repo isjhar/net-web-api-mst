@@ -26,9 +26,20 @@ namespace NetWebApiTemplate.Api.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw AppExceptionFactory.Forbidden;
 
-            var userInfo = await _userService.FindUserInfoByIdAsync(Guid.Parse(userId));
+            try
+            {
+                var userInfo = await _userService.FindUserInfoByIdAsync(Guid.Parse(userId));
 
-            return Json(new ApiResponse<UserInfoDto>(userInfo));
+                return Json(new ApiResponse<UserInfoDto>(userInfo));
+            }
+            catch (Exception ex)
+            {
+                if (ex == AppExceptionFactory.EntityNotFound)
+                {
+                    throw AppExceptionFactory.Forbidden;
+                }
+                throw;
+            }
         }
     }
 }

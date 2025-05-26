@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NetWebApiTemplate.Api.Middlewares;
+using NetWebApiTemplate.Api.Models;
 using NetWebApiTemplate.Api.OperationFilters;
 using NetWebApiTemplate.Infrastructure.Auth;
 using NewWebApiTemplate.Application.Exceptions;
@@ -13,6 +14,7 @@ using NewWebApiTemplate.Infrastructure.Security;
 using NewWebApiTemplate.Persistence.Contexts;
 using NewWebApiTemplate.Persistence.Repositories;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +64,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = jwtSetting.Issuer,
             ValidAudience = jwtSetting.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.Secret))
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+
+                var result = JsonSerializer.Serialize(new ApiResponse<string>("Unauthorized"));
+
+                return context.Response.WriteAsync(result);
+            }
         };
     });
 

@@ -10,6 +10,6 @@
         CreateRole,
         EditRole,
         ViewRole,
-        DeleteRole
+        DeleteRole,
     }
 }

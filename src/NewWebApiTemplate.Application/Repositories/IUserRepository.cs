@@ -5,7 +5,7 @@ namespace NewWebApiTemplate.Application.Repositories
 {
     public interface IUserRepository
     {
-        Task<User?> AuthenticateAsync(UserCredentialsDto credentials);
-        Task<User?> FindByIdAsync(Guid id);
+        Task<User> AuthenticateAsync(UserCredentialsDto credentials);
+        Task<User> FindByIdAsync(Guid id);
     }
 }

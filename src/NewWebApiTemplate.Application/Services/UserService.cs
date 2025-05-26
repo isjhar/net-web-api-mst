@@ -1,5 +1,4 @@
 ﻿using NewWebApiTemplate.Application.Dtos;
-using NewWebApiTemplate.Application.Exceptions;
 using NewWebApiTemplate.Application.Interfaces;
 using NewWebApiTemplate.Application.Repositories;
 using NewWebApiTemplate.Domain.Entities;
@@ -22,23 +21,23 @@ namespace NewWebApiTemplate.Application.Services
 
         public async Task<PairTokenDto> LoginAsync(UserCredentialsDto auth)
         {
-            var authenticatedUser = await _userRepository.AuthenticateAsync(auth) ?? throw AppExceptionFactory.UsernameOrPasswordIncorrect;
+            var authenticatedUser = await _userRepository.AuthenticateAsync(auth);
 
             return await GeneratePairToken(authenticatedUser);
         }
 
         public async Task<PairTokenDto> ReloginAsync(string refreshToken)
         {
-            var userId = await _refreshTokenRepository.FindUserIdByRefreshToken(refreshToken) ?? throw AppExceptionFactory.InvalidParams;
+            var userId = await _refreshTokenRepository.FindUserIdByRefreshTokenAsync(refreshToken);
 
-            var authenticatedUser = await _userRepository.FindByIdAsync(userId) ?? throw AppExceptionFactory.InvalidParams;
+            var authenticatedUser = await _userRepository.FindByIdAsync(userId);
 
             return await GeneratePairToken(authenticatedUser);
         }
 
         public async Task<UserInfoDto> FindUserInfoByIdAsync(Guid id)
         {
-            var user = await _userRepository.FindByIdAsync(id) ?? throw AppExceptionFactory.InvalidParams;
+            var user = await _userRepository.FindByIdAsync(id);
 
             return new UserInfoDto
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewWebApiTemplate.Application.Dtos;
+using NewWebApiTemplate.Application.Exceptions;
 using NewWebApiTemplate.Application.Interfaces;
 using NewWebApiTemplate.Application.Repositories;
 using NewWebApiTemplate.Domain.Entities;
@@ -16,67 +17,57 @@ namespace NewWebApiTemplate.Persistence.Repositories
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<User?> AuthenticateAsync(UserCredentialsDto credentials)
+        public async Task<User> AuthenticateAsync(UserCredentialsDto credentials)
         {
-            User? result = null;
             var userRow = await context.Users
                 .Include(u => u.Roles)
                     .ThenInclude(u => u.Permissions)
-                .FirstOrDefaultAsync(u => u.Username == credentials.Username);
+                .FirstOrDefaultAsync(u => u.Username == credentials.Username) ?? throw AppExceptionFactory.EntityNotFound;
 
-            if (userRow != null)
+            if (!await _passwordHasher.VerifyPassowrdAsync(credentials.Password, userRow.Password))
             {
-                if (await _passwordHasher.VerifyPassowrdAsync(credentials.Password, userRow.Password))
-                {
-                    var roles = userRow.Roles.Select(c => new Role
-                    {
-                        Id = c.Id,
-                        Name = c.Name,
-                        Permissions = c.Permissions.Select(p => PermissionKeyMapper.ToDomain(p.Key)).ToList()
-                    }).ToList();
-
-                    result = new User
-                    {
-                        Id = userRow.Id,
-                        Email = userRow.Email,
-                        Name = userRow.Name,
-                        Username = userRow.Username,
-                        Roles = roles,
-                    };
-                }
+                throw AppExceptionFactory.EntityNotFound;
             }
 
-            return result;
+            var roles = userRow.Roles.Select(c => new Role
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Permissions = c.Permissions.Select(p => PermissionKeyMapper.ToDomain(p.Key)).ToList()
+            }).ToList();
+
+            return new User
+            {
+                Id = userRow.Id,
+                Email = userRow.Email,
+                Name = userRow.Name,
+                Username = userRow.Username,
+                Roles = roles,
+            };
         }
 
-        public async Task<User?> FindByIdAsync(Guid id)
+        public async Task<User> FindByIdAsync(Guid id)
         {
-            User? result = null;
             var userRow = await context.Users
                 .Include(u => u.Roles)
                     .ThenInclude(u => u.Permissions)
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == id) ?? throw AppExceptionFactory.EntityNotFound;
 
-            if (userRow != null)
+            var roles = userRow.Roles.Select(c => new Role
             {
-                var roles = userRow.Roles.Select(c => new Role
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    Permissions = c.Permissions.Select(p => PermissionKeyMapper.ToDomain(p.Key)).ToList()
-                }).ToList();
+                Id = c.Id,
+                Name = c.Name,
+                Permissions = c.Permissions.Select(p => PermissionKeyMapper.ToDomain(p.Key)).ToList()
+            }).ToList();
 
-                result = new User
-                {
-                    Id = userRow.Id,
-                    Email = userRow.Email,
-                    Name = userRow.Name,
-                    Username = userRow.Username,
-                    Roles = roles,
-                };
-            }
-
-            return result;
+            return new User
+            {
+                Id = userRow.Id,
+                Email = userRow.Email,
+                Name = userRow.Name,
+                Username = userRow.Username,
+                Roles = roles,
+            };
         }
     }
 }

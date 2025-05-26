@@ -28,10 +28,18 @@ namespace NetWebApiTemplate.Api.Middlewares
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 var response = new ApiResponse<string>("Internal server error");
 
-                if (ex is AppException)
+                if (ex is UserFriendlyException)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     response.Message = ex.Message;
+                }
+                else
+                {
+                    if (ex == AppExceptionFactory.Forbidden)
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        response.Message = ex.Message;
+                    }
                 }
 
                 var json = JsonSerializer.Serialize(response);

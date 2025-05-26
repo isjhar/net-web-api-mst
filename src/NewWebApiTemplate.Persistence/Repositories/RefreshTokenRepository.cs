@@ -16,18 +16,14 @@ namespace NewWebApiTemplate.Persistence.Repositories
             _configuration = configuration;
         }
 
-        public async Task<Guid?> FindUserIdByRefreshToken(string refreshToken)
+        public async Task<Guid> FindUserIdByRefreshTokenAsync(string refreshToken)
         {
-            Guid? result = null;
-            var row = await context.RefreshTokens.FirstOrDefaultAsync(r => r.Token == refreshToken);
-            if (row != null)
-            {
-                result = row.UserId;
-            }
-            return result;
+            var row = await context.RefreshTokens.FirstOrDefaultAsync(r => r.Token == refreshToken) ?? throw AppExceptionFactory.EntityNotFound;
+
+            return row.UserId;
         }
 
-        public async Task RevokeRefreshToken(string refreshToken)
+        public async Task RevokeRefreshTokenAsync(string refreshToken)
         {
             var row = await context.RefreshTokens.FirstOrDefaultAsync(r => r.Token == refreshToken);
             if (row != null)
