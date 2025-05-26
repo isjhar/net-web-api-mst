@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewWebApiTemplate.Persisten
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetWebApiTemplate.Api", "src\NetWebApiTemplate.Api\NetWebApiTemplate.Api.csproj", "{4FCBBA5D-231A-432D-9CB8-57B022C95211}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetWebApiTemplate.Infrastructure", "src\NetWebApiTemplate.Infrastructure\NetWebApiTemplate.Infrastructure.csproj", "{8C5DB510-7BD8-48EE-BF86-A57E41F0F6C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetWebApiTemplate.Infrastructure", "src\NetWebApiTemplate.Infrastructure\NetWebApiTemplate.Infrastructure.csproj", "{8C5DB510-7BD8-48EE-BF86-A57E41F0F6C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetWebApiTemplate.IntegrationTests", "tests\NetWebApiTemplate.IntegrationTests\NetWebApiTemplate.IntegrationTests.csproj", "{F40C0D3F-0EDF-4F9E-AA66-3EA6877EED4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{8C5DB510-7BD8-48EE-BF86-A57E41F0F6C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C5DB510-7BD8-48EE-BF86-A57E41F0F6C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C5DB510-7BD8-48EE-BF86-A57E41F0F6C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F40C0D3F-0EDF-4F9E-AA66-3EA6877EED4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F40C0D3F-0EDF-4F9E-AA66-3EA6877EED4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F40C0D3F-0EDF-4F9E-AA66-3EA6877EED4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F40C0D3F-0EDF-4F9E-AA66-3EA6877EED4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

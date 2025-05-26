@@ -30,7 +30,7 @@ namespace NetWebApiTemplate.Api.Controllers
             {
                 var userInfo = await _userService.FindUserInfoByIdAsync(Guid.Parse(userId));
 
-                return Json(new ApiResponse<UserInfoDto>(userInfo));
+                return Ok(new ApiResponse<UserInfoDto>(userInfo));
             }
             catch (Exception ex)
             {

@@ -9,7 +9,5 @@
         public static readonly AppException Forbidden = new("Forbidden");
 
         public static readonly AppException EntityNotFound = new("Entity is not found");
-
-        public static readonly UserFriendlyException UsernameOrPasswordIncorrect = new("Username or password was incorrect");
     }
 }
