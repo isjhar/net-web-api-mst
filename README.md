@@ -43,7 +43,6 @@ Add this configuration to appsettings.Development.json
 
 Run the Project
 ```sh
-cd src\NetWebApiTemplate.Api
 dotnet run
 ```
 
