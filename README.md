@@ -22,10 +22,26 @@ This is a template project for .NET Web Api. Project structure follow Clean Arch
 
 ### Apply Migration
 ```sh
-dotnet ef database update
+cd src\NetWebApiTemplate.Persistence
+dotnet ef database update -- "Data Source=[your_data_source_path]"			
 ```
 
 ### Run
+```sh
+cd src\NetWebApiTemplate.Api
+touch appsettings.Development.json
+```
+
+Add this configuration to appsettings.Development.json
+```json
+{
+    "ConnectionStrings": {
+        "AppDbContext": "Data Source=[your_data_source_path]"
+    }
+}
+```
+
+Run the Project
 ```sh
 cd src\NetWebApiTemplate.Api
 dotnet run

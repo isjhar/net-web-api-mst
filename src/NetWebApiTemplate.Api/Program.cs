@@ -19,11 +19,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddCustomServices();
 
-var folder = Environment.SpecialFolder.LocalApplicationData;
-var path = Environment.GetFolderPath(folder);
-var dbPath = Path.Join(path, "web-api-template.db");
+var appDbContextConnectionString = builder.Configuration.GetConnectionString("AppDbContext");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite($"Data Source={dbPath}"));
+    options.UseSqlite(appDbContextConnectionString));
 
 builder.Services.AddIdentityCore<ApplicationUser>()
     .AddRoles<ApplicationRole>()
