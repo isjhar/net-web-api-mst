@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
-using NetWebApiTemplate.Api.Attributes;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace NetWebApiTemplate.Api.OperationFilters
@@ -19,7 +18,7 @@ namespace NetWebApiTemplate.Api.OperationFilters
                 var methodInfoAttributes = context.MethodInfo.GetCustomAttributes(true);
 
                 hasAuthorize = HasAttribute<AuthorizeAttribute>(declaringTypeAttributes, methodInfoAttributes) ||
-                    HasAttribute<PermissionAttribute>(declaringTypeAttributes, methodInfoAttributes);
+                    HasAttribute<AuthorizeAttribute>(declaringTypeAttributes, methodInfoAttributes);
             }
 
             var allowAnonymous = context.MethodInfo.GetCustomAttributes(true).OfType<AllowAnonymousAttribute>().Any();

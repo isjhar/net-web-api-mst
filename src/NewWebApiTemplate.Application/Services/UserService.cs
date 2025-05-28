@@ -1,4 +1,5 @@
-﻿using NewWebApiTemplate.Application.Dtos;
+﻿using NewWebApiTemplate.Application.Constants;
+using NewWebApiTemplate.Application.Dtos;
 using NewWebApiTemplate.Application.Interfaces;
 using NewWebApiTemplate.Application.Repositories;
 using NewWebApiTemplate.Domain.Entities;
@@ -75,7 +76,7 @@ namespace NewWebApiTemplate.Application.Services
 
             foreach (var permission in user.Roles.SelectMany(r => r.Permissions).Distinct())
             {
-                result.Add(new Claim("Permission", permission.ToString()));
+                result.Add(new Claim(AppConstant.Permission.ToLower(), permission));
             }
 
             return result;

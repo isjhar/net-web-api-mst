@@ -6,7 +6,7 @@
 
         public Guid UserId { get; set; }
 
-        public User? User { get; set; }
+        public ApplicationUser? User { get; set; }
 
         public required string Token { get; set; }
 

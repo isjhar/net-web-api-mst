@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using NewWebApiTemplate.Infrastructure.Security;
 
 namespace NewWebApiTemplate.Persistence.Contexts
 {
@@ -14,7 +13,7 @@ namespace NewWebApiTemplate.Persistence.Contexts
             var dbPath = System.IO.Path.Join(path, "web-api-template.db");
             optionsBuilder.UseSqlite($"Data Source={dbPath}");
 
-            return new AppDbContext(optionsBuilder.Options, new BcryptPasswordHasher());
+            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }

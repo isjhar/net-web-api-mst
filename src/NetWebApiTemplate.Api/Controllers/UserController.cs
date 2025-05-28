@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NetWebApiTemplate.Api.Attributes;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NetWebApiTemplate.Api.Models;
 using NewWebApiTemplate.Application.Dtos;
 using NewWebApiTemplate.Application.Exceptions;
@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace NetWebApiTemplate.Api.Controllers
 {
-    [Route("user")]
+    [Route("users")]
     [ApiController]
     public class UserController : Controller
     {
@@ -20,7 +20,7 @@ namespace NetWebApiTemplate.Api.Controllers
             _userService = userService;
         }
 
-        [Permission(PermissionKey.ViewUser)]
+        [Authorize(Policy = PermissionKey.ViewUser)]
         [HttpGet()]
         public async Task<IActionResult> GetLoggedUserInfo()
         {

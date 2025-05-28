@@ -1,22 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NewWebApiTemplate.Application.Interfaces;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NewWebApiTemplate.Persistence.Entities;
 
 namespace NewWebApiTemplate.Persistence.Contexts
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<Permission> Permissions { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
-        private readonly IPasswordHasher _passwordHasher;
-
-        public AppDbContext(DbContextOptions<AppDbContext> options, IPasswordHasher passwordHasher)
+        public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
         {
-            _passwordHasher = passwordHasher;
         }
     }
 }

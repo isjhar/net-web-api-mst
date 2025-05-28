@@ -1,72 +1,66 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NewWebApiTemplate.Application.Interfaces;
+﻿using Microsoft.AspNetCore.Identity;
+using NewWebApiTemplate.Application.Constants;
+using NewWebApiTemplate.Domain.Enums;
 using NewWebApiTemplate.Persistence.Entities;
+using System.Security.Claims;
 
 namespace NewWebApiTemplate.Persistence.Contexts
 {
     public static class SeedingInitializer
     {
-        public static async Task Initialize(AppDbContext context, IPasswordHasher passwordHasher)
+        public static async Task Initialize(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
-            if (await context.Users.AnyAsync())
+            var sysAdminRole = "Sys Admin";
+            var sysAdminEmail = "sysadmin@email.com";
+
+            var role = await roleManager.FindByNameAsync(sysAdminRole);
+            if (role == null)
             {
-                return;
+                role = new ApplicationRole { Name = sysAdminRole };
+                await roleManager.CreateAsync(role);
             }
-            var permissions = new List<Permission>
+
+            var claims = new[]
             {
-                new() {
-                    Key = "create.user",
-                    Description = "Create user"
-                },
-                new() {
-                    Key = "edit.user",
-                    Description = "Edit user"
-                },
-                new() {
-                    Key = "view.user",
-                    Description = "View user"
-                },
-                new() {
-                    Key = "delete.user",
-                    Description = "Delete user"
-                },
-                new() {
-                    Key = "create.role",
-                    Description = "Create role"
-                },
-                new() {
-                    Key = "edit.role",
-                    Description = "Edit role"
-                },
-                new() {
-                    Key = "view.role",
-                    Description = "View role"
-                },
-                new() {
-                    Key = "delete.role",
-                    Description = "Delete role"
-                },
+                new Claim(AppConstant.Permission, PermissionKey.CreateUser),
+                new Claim(AppConstant.Permission, PermissionKey.EditUser),
+                new Claim(AppConstant.Permission, PermissionKey.DeleteUser),
+                new Claim(AppConstant.Permission, PermissionKey.ViewUser),
+                new Claim(AppConstant.Permission, PermissionKey.CreateRole),
+                new Claim(AppConstant.Permission, PermissionKey.EditRole),
+                new Claim(AppConstant.Permission, PermissionKey.DeleteRole),
+                new Claim(AppConstant.Permission, PermissionKey.ViewRole),
             };
 
-            var hashedPassword = await passwordHasher.HashPasswordAsync("1234");
-
-            var user = new User
+            foreach (var claim in claims)
             {
-                Username = "sysadmin",
-                Email = "sysadmin@email.com",
-                Name = "Sys Admin",
-                Password = hashedPassword,
-                Roles =
-                [
-                    new() {
-                        Name = "Sys Admin",
-                        Permissions = permissions,
+                var roleClaims = await roleManager.GetClaimsAsync(role);
+                if (!roleClaims.Any(rc => rc.Type == claim.Type && rc.Value == claim.Value))
+                {
+                    await roleManager.AddClaimAsync(role, claim);
+                }
+            }
+
+            var user = await userManager.FindByEmailAsync(sysAdminEmail);
+            if (user == null)
+            {
+                user = new ApplicationUser
+                {
+                    UserName = "sysadmin",
+                    Email = "sysadmin@email.com",
+                    Name = "Sys Admin",
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                };
+                var createUserResult = await userManager.CreateAsync(user, "SysAdmin123!");
+
+                if (createUserResult.Succeeded)
+                {
+                    if (!string.IsNullOrEmpty(role?.Name))
+                    {
+                        await userManager.AddToRoleAsync(user, role.Name);
                     }
-                ]
-            };
-
-            await context.Users.AddAsync(user);
-            await context.SaveChangesAsync();
+                }
+            }
         }
     }
 }
