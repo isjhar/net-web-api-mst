@@ -21,7 +21,7 @@ namespace NetWebApiTemplate.IntegrationTests.Controllers
             var response = await client.PostAsJsonAsync("/auth/login", new LoginRequest
             {
                 Username = "sysadmin",
-                Password = "1234",
+                Password = "SysAdmin123!",
             });
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
