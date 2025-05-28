@@ -4,7 +4,7 @@ This is a template project for .NET Web Api. Project structure follow Clean Arch
 ## Dependencies
 - EF Core
 - SQLite
-- Bcrypt
+- Microsoft Identity
 - Swashbuckle
 
 ## Layers
@@ -16,4 +16,20 @@ This is a template project for .NET Web Api. Project structure follow Clean Arch
 
 ## Features
 - Authentication with JWT Auth
-- Role Based Secured API 
+- Claim Based Authorization
+
+## Setup
+
+### Apply Migration
+```sh
+dotnet ef database update
+```
+
+### Run
+```sh
+cd src\NetWebApiTemplate.Api
+dotnet run
+```
+
+
+
